@@ -1,15 +1,14 @@
 #include "GameScene.h"
-#include "TextureManager.h"
-#include <cassert>
+#include "AxisIndicator.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
-#include "AxisIndicator.h"
+#include "TextureManager.h"
+#include <cassert>
 
-GameScene::GameScene() {
-}
+GameScene::GameScene() {}
 
-GameScene::~GameScene() { 
-	delete sprite_; 
+GameScene::~GameScene() {
+	delete sprite_;
 	delete model_;
 	delete debugCamera_;
 }
@@ -19,7 +18,7 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	
+
 	textureHandle_ = TextureManager::Load("bear.png");
 
 	sprite_ = Sprite::Create(textureHandle_, {1, 1});
@@ -39,13 +38,12 @@ void GameScene::Initialize() {
 	debugCamera_ = new DebugCamera(1280, 720);
 
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
-	
+
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
-
 }
 
-void GameScene::Update() { 
+void GameScene::Update() {
 	Vector2 position = sprite_->GetPosition();
 
 	position.x += 2.0f;
@@ -54,11 +52,11 @@ void GameScene::Update() {
 	sprite_->SetPosition(position);
 
 	if (input_->TriggerKey(DIK_SPACE)) {
-	
+
 		audio_->StopWave(voiceHandle_);
 	}
 
-	#ifdef _DEBUG
+#ifdef _DEBUG
 
 	ImGui::Begin("Debug1");
 	ImGui::Text("q %d,%d,%d", 2050, 12, 31);
@@ -70,20 +68,15 @@ void GameScene::Update() {
 
 	ImGui::ShowDemoWindow();
 
-	#endif
-
-	
+#endif
 
 	debugCamera_->Update();
-
 }
 
 void GameScene::Draw() {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
-
-	
 
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
@@ -92,15 +85,12 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-	
-	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
 	dxCommon_->ClearDepthBuffer();
 
-	
 #pragma endregion
 
 #pragma region 3Dオブジェクト描画
@@ -115,7 +105,7 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, 10, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
-	
+
 #pragma endregion
 
 #pragma region 前景スプライト描画
@@ -127,10 +117,8 @@ void GameScene::Draw() {
 	/// </summary>
 	sprite_->Draw();
 
-	
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
 #pragma endregion
-	
 }
