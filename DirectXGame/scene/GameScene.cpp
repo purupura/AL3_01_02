@@ -16,7 +16,7 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-
+	textureHandle_ = TextureManager::Load("bear.png");
 
 }
 
