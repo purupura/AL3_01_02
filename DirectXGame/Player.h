@@ -28,7 +28,7 @@ public:
 
 private:
 	// 　ワールド変換データ
-	WorldTransform WorldTransform_;
+	WorldTransform worldTransform_;
 	// 　モデル
 	Model* model_ = nullptr;
 	// 　テクスチャハンドル
