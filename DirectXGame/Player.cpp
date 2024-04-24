@@ -10,8 +10,9 @@ void Player::Initialize(Model* model, uint32_t textureHandle ,
 
 	viewProjection_ = viewProjection;
 
-	worldTransform_ = 
+	worldTransform_.Initialize();
 }
+
 
 void Player::Update() {
  

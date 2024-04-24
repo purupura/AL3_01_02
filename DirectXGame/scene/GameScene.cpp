@@ -23,7 +23,7 @@ void GameScene::Initialize() {
 
 	model_ = Model::Create();
 
-	worldTransform_.Initialize();
+	
 
 	viewProjection_.Initialize();
 	//自キャラの生成
