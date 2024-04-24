@@ -5,11 +5,12 @@ void Player::Initialize(Model* model, uint32_t textureHandle ,
 	ViewProjection* viewProjection) {
 
 	assert(model);
-
+	model_ = model;
 	textureHandle_ = textureHandle;
 
 	viewProjection_ = viewProjection;
 
+	worldTransform_ = 
 }
 
 void Player::Update() {

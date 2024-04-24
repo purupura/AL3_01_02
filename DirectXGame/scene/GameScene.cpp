@@ -19,7 +19,7 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	textureHandle_ = TextureManager::Load("bear.png");
+	textureHandle_ = TextureManager::Load("sample.png");
 
 	model_ = Model::Create();
 
@@ -29,7 +29,7 @@ void GameScene::Initialize() {
 	//自キャラの生成
 	 player_ = new Player();
 	//自キャラの初期化
-	 player_->Initialize();
+	 player_->Initialize(model_,textureHandle_,&viewProjection_);
 }
 
 void GameScene::Update() {
