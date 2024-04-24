@@ -2,13 +2,16 @@
 #include "TextureManager.h"
 #include <cassert>
 
+
 GameScene::GameScene() {
 
 }
 
 GameScene::~GameScene() { 
 
-	delete model_; }
+delete model_; 
+delete player_;
+}
 
 void GameScene::Initialize() {
 
@@ -16,17 +19,23 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	textureHandle_ = TextureManager::Load("meliy.blend");
+	textureHandle_ = TextureManager::Load("bear.png");
 
 	model_ = Model::Create();
 
 	worldTransform_.Initialize();
 
 	viewProjection_.Initialize();
-
+	//自キャラの生成
+	 player_ = new Player();
+	//自キャラの初期化
+	 player_->Initialize();
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+	//自キャラの更新
+	player_->Update();
+}
 
 void GameScene::Draw() {
 
@@ -54,7 +63,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-
+	player_->Draw();
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
