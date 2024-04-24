@@ -1,2 +1,9 @@
 #pragma once
-class Player {};
+
+/// <summary>
+/// 自キャラ
+/// </summary>
+class Player {
+
+
+};
