@@ -6,9 +6,9 @@ GameScene::GameScene() {
 
 }
 
-GameScene::~GameScene() {
+GameScene::~GameScene() { 
 
-}
+	delete model_; }
 
 void GameScene::Initialize() {
 
@@ -17,6 +17,12 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	textureHandle_ = TextureManager::Load("meliy.blend");
+
+	model_ = Model::Create();
+
+	worldTransform_.Initialize();
+
+	viewProjection_.Initialize();
 
 }
 
