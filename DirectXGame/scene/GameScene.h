@@ -8,6 +8,8 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include"Player.h"
+#include <vector>
+#include "DebugCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -54,5 +56,15 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	// 　自キャラ
 	Player* player_ = nullptr;
+
+	Model* modelBlock_ = nullptr;
+	std::vector<std::vector<WorldTransform*>>worldTransformBlocks_;
+
+	bool isDebugCameraActive_ = false;
+
+	DebugCamera* debugCamera_ = nullptr;
+
+
+
 	/// </summary>
 };
