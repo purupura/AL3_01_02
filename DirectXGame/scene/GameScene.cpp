@@ -16,6 +16,9 @@ delete player_;
 delete modelBlock_;
 
 delete debugCamera_;
+
+delete modelSkydome_;
+
 for (std::vector<WorldTransform*>&worldTransformBlockLine:worldTransformBlocks_) {
 	for (WorldTransform* worldTransformBlock : worldTransformBlockLine)
 	{
@@ -39,10 +42,19 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 
 	viewProjection_.Initialize();
+	
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+
 	//自キャラの生成
 	 player_ = new Player();
 	//自キャラの初期化
 	 player_->Initialize(model_,textureHandle_,&viewProjection_);
+
+	 // 自キャラの生成
+	 skydome_ = new Skydome();
+	 // 自キャラの初期化
+	 skydome_->Initialize(modelSkydome_,&viewProjection_);
+
 
 	 modelBlock_ = Model::CreateFromOBJ("cube");
 
@@ -69,10 +81,13 @@ void GameScene::Initialize() {
 
 	 debugCamera_ = new DebugCamera(1280, 720);
 
+	 
+
 }
 //更新
 void GameScene::Update() {
 
+	skydome_->Update();
 	//自キャラの更新
 	player_->Update();
 	//ブロックの更新
@@ -132,6 +147,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	skydome_->Draw();
 	player_->Draw();
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
