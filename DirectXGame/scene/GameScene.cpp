@@ -29,6 +29,8 @@ for (std::vector<WorldTransform*>&worldTransformBlockLine:worldTransformBlocks_)
 
 }
 worldTransformBlocks_.clear();
+
+delete mapChipField_;
 }
 
 void GameScene::Initialize() {
@@ -45,6 +47,8 @@ void GameScene::Initialize() {
 	
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 
+	
+
 	//自キャラの生成
 	 player_ = new Player();
 	//自キャラの初期化
@@ -58,26 +62,40 @@ void GameScene::Initialize() {
 
 	 modelBlock_ = Model::CreateFromOBJ("cube");
 
-	 const uint32_t kNumBlockVertical   = 10;
-	 const uint32_t kNumBlockHorizontal = 20;
-
-	 const float kBlockHeigt = 2.0f;
-	 const float kBlockWidth = 2.0f;
-
-	 worldTransformBlocks_.resize(kNumBlockVertical);
-	 for (uint32_t i = 0; i < kNumBlockVertical; ++i) {
-		 worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-	 }
-
-	 for (uint32_t i = 0; i < kNumBlockVertical; ++i) {
-		 for (uint32_t j = 0; j < kNumBlockHorizontal; ++j){
-
-
 	 debugCamera_ = new DebugCamera(1280, 720);
 
-	 
+	 mapChipField_ = new MapChipField;
+	 mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
+
+	 GenerateBlocks();
 
 }
+
+
+
+void GameScene::GenerateBlocks() {
+	uint32_t NumBlockVertical = mapChipField_->GetNumBlockVirtical();
+	uint32_t NumBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+
+	worldTransformBlocks_.resize(NumBlockHorizontal);
+
+	for (uint32_t i = 0; i < NumBlockVertical; ++i) {
+		worldTransformBlocks_[i].resize(NumBlockHorizontal);
+	}
+
+	for (uint32_t i = 0; i < NumBlockVertical; ++i) {
+		for (uint32_t j = 0; j < NumBlockHorizontal; ++j) {
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
+
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionTypeByIndex(j, i);
+			}
+		}
+	}
+}
+
 //更新
 void GameScene::Update() {
 
