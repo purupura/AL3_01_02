@@ -72,12 +72,6 @@ void GameScene::Initialize() {
 	 for (uint32_t i = 0; i < kNumBlockVertical; ++i) {
 		 for (uint32_t j = 0; j < kNumBlockHorizontal; ++j){
 
-			 worldTransformBlocks_[i][j] = new WorldTransform();
-			 worldTransformBlocks_[i][j]->Initialize();
-			 worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j*2;
-			 worldTransformBlocks_[i][j]->translation_.y = kBlockHeigt * i*2;
-		 }
-	 }
 
 	 debugCamera_ = new DebugCamera(1280, 720);
 
