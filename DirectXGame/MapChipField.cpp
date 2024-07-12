@@ -14,9 +14,6 @@ std::map<std::string, MapChipType> mapChipTable = {
 };
 
 }
-uint32_t MapChipField::GetNumBlockVirtical() { return kNumBlockVirtical; }
-uint32_t MapChipField::GetNumBlockHorizontal() { return kNumBlockHorizontal; }
-
 void MapChipField::ResetMapChipData() {
 	// マップチップデータをリセット
 	mapChipData_.data.clear();

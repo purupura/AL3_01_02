@@ -71,31 +71,6 @@ void GameScene::Initialize() {
 
 }
 
-
-
-void GameScene::GenerateBlocks() {
-	uint32_t NumBlockVertical = mapChipField_->GetNumBlockVirtical();
-	uint32_t NumBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
-
-	worldTransformBlocks_.resize(NumBlockHorizontal);
-
-	for (uint32_t i = 0; i < NumBlockVertical; ++i) {
-		worldTransformBlocks_[i].resize(NumBlockHorizontal);
-	}
-
-	for (uint32_t i = 0; i < NumBlockVertical; ++i) {
-		for (uint32_t j = 0; j < NumBlockHorizontal; ++j) {
-			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
-
-				WorldTransform* worldTransform = new WorldTransform();
-				worldTransform->Initialize();
-				worldTransformBlocks_[i][j] = worldTransform;
-				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionTypeByIndex(j, i);
-			}
-		}
-	}
-}
-
 //更新
 void GameScene::Update() {
 
