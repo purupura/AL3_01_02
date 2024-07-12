@@ -4,6 +4,7 @@
 #include"MathUtilityForText.h"
 
 
+
 GameScene::GameScene() {
 	
 }
@@ -160,3 +161,29 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
+
+void GameScene::GenerateBlocks() {
+
+	uint32_t kNumBlockVirtical = mapChipField_->GetNumBlockVirtical();
+	uint32_t kNumBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+
+	worldTransformBlocks_.resize(kNumBlockVirtical);
+
+	for (uint32_t i = 0; i < kNumBlockVirtical; i++) {
+		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
+	}
+
+	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
+		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
+
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionTypeByIndex(j, i);
+			}
+		}
+	}
+}
+
+

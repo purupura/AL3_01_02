@@ -7,11 +7,11 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include"Player.h"
-#include <vector>
+#include "Player.h"
 #include "DebugCamera.h"
-#include"Skydome.h"
-#include"MapChipField.h"
+#include "skydome.h"
+#include <vector>
+#include "MapChipField.h"
 
 /// <summary>
 /// ゲームシーン
@@ -44,7 +44,7 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	void GenerateBlocks();
+	
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -60,6 +60,7 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	// 　自キャラ
 	Player* player_ = nullptr;
+	Model* modelPlayer_ = nullptr;
 
 	Model* modelBlock_ = nullptr;
 	std::vector<std::vector<WorldTransform*>>worldTransformBlocks_;
@@ -74,7 +75,7 @@ private: // メンバ変数
 
 	MapChipField* mapChipField_;
 
-	
+	void GenerateBlocks();
 
 	/// </summary>
 };
