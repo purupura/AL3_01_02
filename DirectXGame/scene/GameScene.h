@@ -44,8 +44,6 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	
-
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -53,29 +51,36 @@ private: // メンバ変数
 
 	/// <summary>
 	/// ゲームシーン用
+	/// </summary>
+	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
-
+	// 3Dモデル
 	Model* model_ = nullptr;
-	WorldTransform worldTransform_;
-	ViewProjection viewProjection_;
-	// 　自キャラ
-	Player* player_ = nullptr;
-	Model* modelPlayer_ = nullptr;
-
 	Model* modelBlock_ = nullptr;
-	std::vector<std::vector<WorldTransform*>>worldTransformBlocks_;
+	// ワールドトランスフォーム
+	WorldTransform worldTransform_;
+	// ビュープロジェクション
+	ViewProjection viewProjection_;
 
-	bool isDebugCameraActive_ = false;
+	// 自キャラ
+	Player* player_ = nullptr;
 
+	// 縦横ブロック配列
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+
+	// デバッグカメラ有効
+	bool debugCameraActive_ = false;
+	// デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
-	Model* modelSkydome_ = nullptr;
-	
-	Skydome* skydome_ = nullptr;
+	Model* playermodel_ = nullptr;
 
+		Skydome* skydome_ = nullptr;
+	//  3Dモデル
+	    Model* modelSkydome_ = nullptr;
+	// マップチップフィールド
 	MapChipField* mapChipField_;
 
-	void GenerateBlocks();
+	void GenerateBlock();
 
-	/// </summary>
 };
