@@ -18,6 +18,7 @@
 /// </summary>
 class GameScene {
 
+
 public: // メンバ関数
 	/// <summary>
 	/// コンストクラタ
