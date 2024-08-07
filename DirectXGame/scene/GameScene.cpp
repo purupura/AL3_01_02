@@ -40,7 +40,7 @@ void GameScene::Initialize() {
 
 	viewProjection_.Initialize();
 	worldTransform_.Initialize();
-	modelBlock_ = Model::Create();
+	modelBlock_ = Model::CreateFromOBJ("cube",true);
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 
 	mapChipField_ = new MapChipField;
