@@ -28,6 +28,8 @@ GameScene::~GameScene() {
 	delete player_;
 
 	delete modelSkydome_;
+
+	delete cameraController_;
 }
 
 void GameScene::Initialize() {
@@ -40,7 +42,7 @@ void GameScene::Initialize() {
 
 	viewProjection_.Initialize();
 	worldTransform_.Initialize();
-	modelBlock_ = Model::CreateFromOBJ("cube",true);
+	modelBlock_ = Model::Create();
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 
 	mapChipField_ = new MapChipField;
@@ -57,98 +59,85 @@ void GameScene::Initialize() {
 
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
+	// カメラコントローラの生成と初期化
+	cameraController_ = new CameraController();
+	cameraController_->Initialize();
+	cameraController_->setTarget(player_);
+
+	// カメラの移動範囲を設定
+	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
+	cameraController_->SetMovableArea(cameraArea);
+	cameraController_->Reset();
+
 }
 
 void GameScene::Update() {
-	skydome_->Update();
-	debugCamera_->Update();
-	player_->Update();
-
-#ifdef _DEBUG
-
-	if (input_->TriggerKey(DIK_SPACE)) {
-		debugCameraActive_ = !debugCameraActive_;
-	}
-
-#endif //  _DEBUG
-
-	if (debugCameraActive_) {
-
-		debugCamera_->Update();
-
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
-	} else {
-		viewProjection_.UpdateMatrix();
-	}
-
-
-
+	// ブロックのワールド行列を更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
+			if (!worldTransformBlock) {
 				continue;
+			}
+
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 			worldTransformBlock->UpdateMatrix();
 		}
 	}
+
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_SPACE)) {
+		isDebugCameraActive_ = !isDebugCameraActive_;
+	}
+#endif // _DEBUG
+
+	if (isDebugCameraActive_) {
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+	} else {
+		cameraController_->Update();
+		viewProjection_.matView = cameraController_->GetViewProjection().matView;
+		viewProjection_.matProjection = cameraController_->GetViewProjection().matProjection;
+	}
+
+	viewProjection_.TransferMatrix();
+	player_->Update();
 }
 
 void GameScene::Draw() {
-
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
-#pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
-
-	/// <summary>
-	/// ここに背景スプライトの描画処理を追加できる
-	/// </summary>
-
-	// スプライト描画後処理
+	// ここに背景スプライトの描画処理を追加
 	Sprite::PostDraw();
+
 	// 深度バッファクリア
 	dxCommon_->ClearDepthBuffer();
-#pragma endregion
 
-#pragma region 3Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
 
-	/// <summary>
-	/// ここに3Dオブジェクトの描画処理を追加できる
-	skydome_->Draw();
+	// プレイヤーの描画
 	player_->Draw();
-	/// </summary>
-
-	// skydome_->Draw();
-
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
-				continue;
-			modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+	skydome_->Draw();
+	// ブロックの描画
+	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
+		for (const auto& worldTransformBlock : worldTransformBlockLine) {
+			if (worldTransformBlock) {
+				model_->Draw(*worldTransformBlock, viewProjection_);
+			}
 		}
 	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
-#pragma endregion
 
-#pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
-
-	/// <summary>
-	/// ここに前景スプライトの描画処理を追加できる
-	/// </summary>
-
-	// スプライト描画後処理
+	// ここに前景スプライトの描画処理を追加
 	Sprite::PostDraw();
-
-#pragma endregion
 }
 
 void GameScene::GenerateBlock() {

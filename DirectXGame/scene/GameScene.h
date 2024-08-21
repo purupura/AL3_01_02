@@ -12,6 +12,7 @@
 #include "skydome.h"
 #include <vector>
 #include "MapChipField.h"
+#include "CameraController.h"
 
 /// <summary>
 /// ゲームシーン
@@ -58,9 +59,6 @@ private: // メンバ変数
 	// 3Dモデル
 	Model* model_ = nullptr;
 	Model* modelBlock_ = nullptr;
-
-
-
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
 	// ビュープロジェクション
@@ -79,11 +77,15 @@ private: // メンバ変数
 
 	Model* playermodel_ = nullptr;
 
-	Skydome* skydome_ = nullptr;
+		Skydome* skydome_ = nullptr;
 	//  3Dモデル
 	    Model* modelSkydome_ = nullptr;
 	// マップチップフィールド
 	MapChipField* mapChipField_;
+
+	int isDebugCameraActive_ = 0u;
+
+	CameraController* cameraController_;
 
 	void GenerateBlock();
 
