@@ -116,6 +116,7 @@ void GameScene::Draw() {
 	// 深度バッファクリア
 	dxCommon_->ClearDepthBuffer();
 
+
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
 
