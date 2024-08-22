@@ -1,8 +1,12 @@
 #include "Vector3.h"
 
-
-const Vector3 operator+(const Vector3& v1, const Vector3& v2)
-{
-    Vector3 temp(v1);
-    return temp += v2;
-}
+/// <summary>
+/// 3次元ベクトル
+/// </summary>
+struct Vector3 final {
+public:
+	float x;
+	float y;
+	float z;
+	Vector3 operator+(const Vector3& other) const { return Vector3{x + other.x, y + other.y, z + other.z}; }
+};

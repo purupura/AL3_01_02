@@ -13,6 +13,7 @@
 #include <vector>
 #include "MapChipField.h"
 #include "CameraController.h"
+#include "Block.h"
 
 /// <summary>
 /// ゲームシーン
@@ -67,6 +68,8 @@ private: // メンバ変数
 	// 自キャラ
 	Player* player_ = nullptr;
 
+	Block* block_ = nullptr;
+
 	// 縦横ブロック配列
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
@@ -88,5 +91,7 @@ private: // メンバ変数
 	CameraController* cameraController_;
 
 	void GenerateBlock();
+
+
 
 };

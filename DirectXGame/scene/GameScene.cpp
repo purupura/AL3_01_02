@@ -42,23 +42,30 @@ void GameScene::Initialize() {
 
 	viewProjection_.Initialize();
 	worldTransform_.Initialize();
-	modelBlock_ = Model::Create();
+	modelBlock_ = Model::CreateFromOBJ("block",true);
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
-	GenerateBlock();
-	player_ = new Player;
-	playermodel_ = Model::CreateFromOBJ("player", true);
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	model_ = Model::Create();
-	player_->Initialize(model_, textureHandle_, &viewProjection_, playerPosition);
-
 	skydome_ = new Skydome();
 
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
+	block_ = new Block();
+
+	block_->Initialize(modelBlock_, &viewProjection_);
+
+	
+	player_ = new Player;
+	playermodel_ = Model::CreateFromOBJ("player", true);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	model_ = Model::Create();
+	player_->Initialize(model_, &viewProjection_, playerPosition);
+	player_->SetMapChipField(mapChipField_);
+
+	GenerateBlock();
+	
 	// カメラコントローラの生成と初期化
 	cameraController_ = new CameraController();
 	cameraController_->Initialize();
@@ -127,7 +134,7 @@ void GameScene::Draw() {
 	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
 		for (const auto& worldTransformBlock : worldTransformBlockLine) {
 			if (worldTransformBlock) {
-				model_->Draw(*worldTransformBlock, viewProjection_);
+				modelBlock_->Draw(*worldTransformBlock, viewProjection_);
 			}
 		}
 	}
