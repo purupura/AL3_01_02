@@ -48,10 +48,10 @@ void GameScene::Initialize() {
 
 	GenerateBlock();
 	player_ = new Player;
-	playermodel_ = Model::CreateFromOBJ("player", true);
+	playermodel_ = Model::CreateFromOBJ("cube", true);
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	model_ = Model::Create();
-	player_->Initialize(model_, textureHandle_, &viewProjection_, playerPosition);
+	player_->Initialize(playermodel_, textureHandle_, &viewProjection_, playerPosition);
 
 	skydome_ = new Skydome();
 
@@ -120,18 +120,12 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	skydome_->Draw();
-	player_->Draw();
+
 	/// </summary>
 
 	// skydome_->Draw();
 
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
-				continue;
-			modelBlock_->Draw(*worldTransformBlock, viewProjection_);
-		}
-	}
+
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
