@@ -1,100 +1,80 @@
 #pragma once
-
+#define NOMINMAX
+#include "Input.h"
+#include "MathUtilityFortext.h"
 #include "Model.h"
-#include "TurnController.h"
+#include "Sprite.h"
+#include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "Easing.h"
 #include <algorithm>
-#include <array>
+#include <cassert>
+#include <numbers>
 
-class MapChipField; // MapChipField クラスの宣言が必要です
+class MapChipField;
 
 class Player {
 public:
-	// 左右
+	/*Player();
+
+	~Player();*/
+	///< summary>
+	/// 初期化
+	///</summary>
+	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position);
+
+	///< summary>
+	/// 更新
+	///</summary>
+	void Update();
+
+	///< summary>
+	/// 描画
+	///</summary>
+	void Draw();
+
+	const WorldTransform& GetWorldTransform() const { return worldTransform_; };
+
+	const Vector3& GetVelocity() const { return velocity_; }
+
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+
+private:
 	enum class LRDirection {
 		kRight,
 		kLeft,
 	};
 
-	// 角
-	struct CollisionMapInfo {
-		bool hitCeilingFlag = false;
-		bool landingFlag = false;
-		bool wallContactFlag = false;
-		Vector3 movement;
-	};
-
-	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position);
-
-	enum Corner { kRightBottom, kLeftBottom, kRightTop, kLeftTop, kNumCorner };
-
-	void Update();
-
-	void MovePlayer();
-
-	void Draw();
-
-	// seteer
-	void SetMapChipField(MapChipField* mapchipField) { mapChipField_ = mapchipField; }
-	// geter
-	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
-	const Vector3& GetVelocity() const { return velocity_; }
-
-	// プレイヤーの移動加速度
-	static inline const float kAcceleration = 0.1f;
-	// プレイヤーが停止する際の減速率
-	static inline const float kAttenuation = 0.05f;
-	// ジャンプ時の加速度
-	static inline const float kJumpAcceleration = 1.0f;
-	// 重力による加速度
-	static inline const float kGravityAcceleration = 1.0f;
-	// 壁に衝突した際の減速率
-	static inline const float kAttenuationWall = 0.2f;
-	// 着地時の減速率
-	static inline const float kAttenuationLanding = 0.0f;
-	// 落下速度の制限値
-	static inline const float kLimitFallSpeed = 0.5f;
-	// 走行速度の制限値
-	static inline const float kLimitRunSpeed = 0.5f;
-	// ターンするのにかかる時間
-	static inline const float kTimeTurn = 0.3f;
-	// プレイヤーの幅
-	static inline const float kWidth = 0.8f;
-	// プレイヤーの高さ
-	static inline const float kHeight = 0.8f;
-	// 隙間の幅（適切な値に修正する必要あり）
-	static inline const float kBlank = 0.035f;
-	// 地面を探す際の高さ
-	static inline const float kGroundSearchHeight = 0.06f;
-
-	Vector3 CornerPosition(const Vector3& center, Corner corner);
-
+	// ワールド変換データ
 	WorldTransform worldTransform_;
-	ViewProjection* viewProjection_ = nullptr;
+	// モデル
 	Model* model_ = nullptr;
-	uint32_t textureHandle_ = 0u;
-	MapChipField* mapChipField_ = nullptr;
+	// テクスチャハンドル
+	uint32_t texturehandle_ = 0u;
 
-	bool onGround_ = true;
-	LRDirection lrDirection_ = LRDirection::kRight;
-	float turnFirstRotationY_ = 0.0f;
-	float turnTimer_ = 0.0f;
+	ViewProjection* viewprojection_ = nullptr;
+
 	Vector3 velocity_ = {};
 
-	TurnController turnController_;
+	static inline const float kAcceleration = 0.01f;
+	static inline const float kAttenuation = 0.03f;
+	static inline const float kLimitSpeed = 4.0f;
 
-	void CheckMapMove(const CollisionMapInfo& info);
+	LRDirection lrDirection_ = LRDirection::kRight;
 
-	void CheckMapCollision(CollisionMapInfo& info);
+	// 旋回開始時の角度
+	float turnFirstRotationY_ = 0.0f;
+	// 旋回タイマー
+	float turnTimer_ = 0.0f;
 
-	void CheckMapCollisionUp(CollisionMapInfo& info);
-	void CheckMapCollisionDown(CollisionMapInfo& info);
-	void CheckMapCollisionRight(CollisionMapInfo& info);
-	void CheckMapCollisionLeft(CollisionMapInfo& info);
+	// 旋回時間<秒>
+	static inline const float kTimeTurn = 0.3f;
 
-	void TurnControll();
+	bool onGround_ = true;
 
-	void CeilingContact(const CollisionMapInfo& info);
+	MapChipField* mapChipField_ = nullptr;
 
-	void JumpTranformMove(const CollisionMapInfo& info);
+	static inline const float kGravityAcceleration = 0.05f;
+	static inline const float kJumpAcceleration = 0.5f;
+	static inline const float kLimitFallSpeed = .0f;
 };

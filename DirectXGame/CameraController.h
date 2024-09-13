@@ -1,9 +1,9 @@
-﻿#pragma once
 
-#include "MathUtilityForText.h"
-#include "Vector3.h"
+#include "MathUtilityFortext.h"
 #include "ViewProjection.h"
+#include "WorldTransform.h"
 
+// 前方宣言
 class Player;
 
 class CameraController {
@@ -15,26 +15,40 @@ public:
 		float top = 1.0f;
 	};
 
-	// 座標補間割合
-	static inline const float kInterpolationRate = 0.1f; // 補間率を設定
-	static inline const float kVelocityBias = 30.0f;     // 速度バイアス
-
-	Rect movableArea_ = {0, 100, 0, 100};
-	Rect margin_ = {0, 0, 0, 0}; // 各方向へのマージンを追加
-	Player* target_ = nullptr;
-
+	// 初期化
 	void Initialize();
+
+	// 更新
 	void Update();
+
+	void SetTarget(Player* target) { target_ = target; };
+
+	ViewProjection& GetViewProjection() { return viewProjection_; }
+
+	void SetMovableArea(Rect area) { movableArea_ = area; }
+
 	void Reset();
 
-	void SetMovableArea(const Rect& area) { movableArea_ = area; }
-	void SetMargin(const Rect& margin) { margin_ = margin; } // マージン設定メソッドを追加
-	void setTarget(Player* target) { target_ = target; }
-
-	const ViewProjection& GetViewProjection() const { return viewProjection_; }
-
 private:
+	// ビュープロジェクション
 	ViewProjection viewProjection_;
+
+	Player* target_ = nullptr;
+
+	// 追従対象とカメラ座標の差(オフセット)
 	Vector3 targetOffset_ = {0, 0, -15.0f};
-	Vector3 targetPosition_; // 目標座標を追加
+
+	WorldTransform* worldTransform_;
+
+	Rect movableArea_ = {0, 100, 0, 100};
+
+	Vector3 goalPos_;
+
+	// 座標保管割合
+	static inline const float kInterpolationRate = 0.1f;
+
+	// 速度賭け率
+	static inline const float kVelocityBias = 30.0f;
+
+	static inline const Rect kMargin = {-8.0f, 8.0f, -8.0f, 8.0f};
 };

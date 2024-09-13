@@ -1,25 +1,23 @@
 #pragma once
 
 #include "Audio.h"
+#include "CameraController.h"
 #include "DirectXCommon.h"
 #include "Input.h"
+#include "MapChipField.h"
 #include "Model.h"
+#include "Player.h"
+#include "Skydome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "Player.h"
-#include "DebugCamera.h"
-#include "skydome.h"
+#include "debugCamera.h"
 #include <vector>
-#include "MapChipField.h"
-#include "CameraController.h"
-#include "Block.h"
 
 /// <summary>
 /// ゲームシーン
 /// </summary>
 class GameScene {
-
 
 public: // メンバ関数
 	/// <summary>
@@ -47,6 +45,8 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	void GenerateBlocks();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -54,9 +54,10 @@ private: // メンバ変数
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
-	// 3Dモデル
+
+	// モデル
 	Model* model_ = nullptr;
-	Model* modelBlock_ = nullptr;
+
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
 	// ビュープロジェクション
@@ -65,27 +66,30 @@ private: // メンバ変数
 	// 自キャラ
 	Player* player_ = nullptr;
 
-	Block* block_ = nullptr;
+	Model* modelBlock_ = nullptr;
 
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
 	// デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
-	Model* playermodel_ = nullptr;
+	bool isDebugCameraActive_ = false;
 
-		Skydome* skydome_ = nullptr;
-	//  3Dモデル
-	    Model* modelSkydome_ = nullptr;
+	// 天球
+	Skydome* skydome_ = nullptr;
+
+	Model* modelSkydome_ = nullptr;
+
+	// テクスチャハンドル
+	uint32_t skyDometextureHandle_ = 0;
+
 	// マップチップフィールド
 	MapChipField* mapChipField_;
 
-	int isDebugCameraActive_ = 0u;
-
+	// カメラコントローラ
 	CameraController* cameraController_;
 
-	void GenerateBlock();
-
-
-
+	/// <summary>
+	/// ゲームシーン用
+	/// </summary>
 };

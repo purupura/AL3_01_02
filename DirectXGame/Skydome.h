@@ -1,33 +1,34 @@
 #pragma once
+#include "Model.h"
+#include "ViewProjection.h"
+#include "WorldTransform.h"
+#include <cassert>
 
-#include <Model.h>
-#include <WorldTransform.h>
-
+//<summary>
+// 天球
+//</summary>
 class Skydome {
-	ViewProjection* viewProjection_ = nullptr;
-
 public:
-	/// <summary>
-	/// 初期化
-	/// <summary>
-	void Initialize(Model* model, ViewProjection* viewProjection);
+	//<summary>
+	// 初期化
+	//</summary>
+	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewprojection);
 
-	/// <summary>
-	/// 初期化
-	/// <summary>
+	//<summary>
+	// 更新
+	//</summary>
 	void Update();
 
-	/// <summary>
-	/// 初期化
-	/// <summary>
+	//<summary>
+	// 描画
+	//</summary>
 	void Draw();
 
 private:
-	// ワールド変換データ
 	WorldTransform worldTransform_;
-
-	Skydome* skydome_ = nullptr;
-
-	// モデル
 	Model* model_ = nullptr;
+	// テクスチャハンドル
+	uint32_t texturehandle_ = 0u;
+
+	ViewProjection* viewprojection_ = nullptr;
 };
