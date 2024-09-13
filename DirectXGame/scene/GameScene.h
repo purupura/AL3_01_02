@@ -52,9 +52,6 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 	// 3Dモデル
@@ -70,11 +67,8 @@ private: // メンバ変数
 
 	Block* block_ = nullptr;
 
-	// 縦横ブロック配列
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
-	// デバッグカメラ有効
-	bool debugCameraActive_ = false;
 	// デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
