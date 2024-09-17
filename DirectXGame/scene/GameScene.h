@@ -84,7 +84,7 @@ private: // メンバ変数
 	uint32_t skyDometextureHandle_ = 0;
 
 	// マップチップフィールド
-	MapChipField* mapChipField_;
+	MapChipField* mapChipField_ = nullptr;
 
 	// カメラコントローラ
 	CameraController* cameraController_;

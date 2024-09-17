@@ -29,3 +29,23 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
 
 Vector3 Multiply(float scalar, const Vector3& v);
+
+// 代入演算子オーバーロード
+// Vector3の掛け算
+Vector3& operator*=(Vector3& v, float s);
+
+// 2項演算子オーバーロード
+// Vector3の掛け算
+Vector3 operator*(const Vector3& v, float s);
+
+// 代入演算子オーバーロード
+// Vector3の足し算
+Vector3& operator+=(Vector3& v1, const Vector3& v2);
+
+// 2項演算子オーバーロード
+// Vector3の足し算
+const Vector3 operator+(Vector3& v1, Vector3& v2);
+
+Vector3& operator-=(Vector3& lhv, const Vector3& rhv);
+
+const Vector3 operator-(Vector3& v1, Vector3& v2);

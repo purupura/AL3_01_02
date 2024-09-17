@@ -2,6 +2,7 @@
 #include "MathUtilityFortext.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "Easing.h"
 
 // 前方宣言
 class Player;

@@ -6,7 +6,7 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "Easing.h"
+#include "easing.h"
 #include <algorithm>
 #include <cassert>
 #include <numbers>
@@ -15,6 +15,24 @@ class MapChipField;
 
 class Player {
 public:
+	// マップとの当たり判定情報
+	struct CollisionMapInfo {
+		bool ceiling = false;
+		bool landing = false;
+		bool hitWall = false;
+		Vector3 move;
+	};
+
+	enum Corner {
+		kRightBottom,
+		kLeftBottom,
+		kRightTop,
+		kLeftTop,
+
+		kNumCorner // 要素数
+
+	};
+
 	/*Player();
 
 	~Player();*/
@@ -33,11 +51,35 @@ public:
 	///</summary>
 	void Draw();
 
+	void InputMove();
+
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; };
 
 	const Vector3& GetVelocity() const { return velocity_; }
 
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+
+	void CheckHitMap(CollisionMapInfo& info);
+
+	void CheckMapCeiling(CollisionMapInfo& info);
+
+	void CheckHitMapBottom(CollisionMapInfo& info);
+
+	void CheckHitMapRight(CollisionMapInfo& info);
+
+	void CheckHitMapLeft(CollisionMapInfo& info);
+
+	Vector3 CornerPosition(const Vector3& center, Corner corner);
+
+	void CheckMapMove(const CollisionMapInfo& info);
+
+	void HitMapProc(const CollisionMapInfo& info);
+
+	void CheckMapLanding(CollisionMapInfo& info);
+
+	void CheckHitWall(const CollisionMapInfo& info);
+
+	void AnimateTurn();
 
 private:
 	enum class LRDirection {
@@ -50,7 +92,7 @@ private:
 	// モデル
 	Model* model_ = nullptr;
 	// テクスチャハンドル
-	uint32_t texturehandle_ = 0u;
+	uint32_t textureHandle_ = 0u;
 
 	ViewProjection* viewprojection_ = nullptr;
 
@@ -72,9 +114,18 @@ private:
 
 	bool onGround_ = true;
 
-	MapChipField* mapChipField_ = nullptr;
-
 	static inline const float kGravityAcceleration = 0.05f;
 	static inline const float kJumpAcceleration = 0.5f;
-	static inline const float kLimitFallSpeed = .0f;
+	static inline const float kLimitFallSpeed = 2.0f;
+
+	static inline const float kWidth = 1.0f;
+	static inline const float kHeight = 1.0f;
+
+	static inline const float kBlank = 1.0f;
+	static inline const float kAttenuationLanding = 0.03f;
+
+	static inline const float kAttenuationWall = 0.5f;
+
+	// マップチップによるフィールド
+	MapChipField* mapChipField_ = nullptr;
 };
