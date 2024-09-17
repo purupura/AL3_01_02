@@ -84,6 +84,11 @@ public:
 
 	AABB GetAABB();
 
+	bool IsDead() const { return isDead_; }
+
+		// ワールド座標を取得
+	Vector3 GetWorldPosition();
+
 private:
 	enum class LRDirection {
 		kRight,
@@ -132,9 +137,8 @@ private:
 	// マップチップによるフィールド
 	MapChipField* mapChipField_ = nullptr;
 
-	//ワールド座標を取得
-	Vector3 GetWorldPosition();
 
-	
+
+	bool isDead_ = false;
 
 };

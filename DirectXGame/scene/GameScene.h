@@ -50,6 +50,8 @@ public: // メンバ関数
 
 	void GenerateBlocks();
 
+	bool IsFinished() const { return finished_; }
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -102,9 +104,19 @@ private: // メンバ変数
 
 	DeathParticles* deathParticle_ = nullptr;
 
+	bool finished_ = false;
+
 	void CheckAllCollisions();
+
+	enum class Phase { 
+		kPlay, kDeath };
+
+	Phase phase_;
+
+	void ChangePhase();
 
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
 };
+

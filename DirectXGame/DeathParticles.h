@@ -17,6 +17,8 @@ public:
 
 	void Draw();
 
+	bool IsFinished() const { return isFinished_; }
+
 private:
 	// モデルのポインタ
 	Model* model_ = nullptr;
@@ -43,4 +45,6 @@ private:
 	ObjectColor objectColor_;
 	// 色の数値
 	Vector4 color_;
+
+
 };

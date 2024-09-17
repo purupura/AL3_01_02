@@ -501,7 +501,7 @@ void Player::AnimateTurn() {
 void Player::OnCollision(const Enemy* enemy) { 
 	(void)enemy; 
 	
-	velocity_ += Vector3(0, kJumpAcceleration / 4.0f, 0);
+	isDead_ = true;
 }
 
 Vector3 Player::GetWorldPosition() { 
