@@ -37,3 +37,23 @@ void Enemy::Update() {
 void Enemy::Draw() {
  model_->Draw(worldTransform_, *viewprojection_,textureHandle_); 
 }
+
+AABB Enemy::GetAABB() {
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb;
+	aabb.min = {worldPos.x - 0.5f, worldPos.y - 0.5f, worldPos.z - 0.5f};
+	aabb.max = {worldPos.x + 0.5f, worldPos.y + 0.5f, worldPos.z + 0.5f};
+	return aabb;
+}
+
+Vector3 Enemy::GetWorldPosition() {
+	Vector3 worldPos;
+	// ワールド行列から平行移動成分を取り出す
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	return worldPos;
+}
+
+void Enemy::OnCollision(const Player* player) { (void)player; }

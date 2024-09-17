@@ -19,7 +19,9 @@ GameScene::~GameScene() {
 
 	delete mapChipField_;
 
-	delete enemy_;
+	for (Enemy* enemy : enemies_) {
+		delete enemy;
+	}
 }
 
 void GameScene::Initialize() {
@@ -54,8 +56,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = new Player();
 
-	// 敵の生成
-	enemy_ = new Enemy();
+
 
 	// モデルデータの生成
 
@@ -83,9 +84,18 @@ void GameScene::Initialize() {
 
 	player_->SetMapChipField(mapChipField_);
 
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18, 18);
-	// 敵の初期化
-	enemy_->Initialize(enemyModel_, enemyTextureHandle_, &viewProjection_, enemyPosition);
+
+
+	for (int32_t i = 0; i < 3; ++i) {
+		Enemy* newEnemy = new Enemy();
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(11 + i * 3, 18 - i);
+		
+		newEnemy->Initialize(enemyModel_, enemyTextureHandle_, &viewProjection_, enemyPosition);
+	
+	enemies_.push_back(newEnemy);
+	}
+	
+	
 
 	// カメラコントローラの初期化
 	cameraController_ = new CameraController();
@@ -102,8 +112,9 @@ void GameScene::Update() {
 	player_->Update();
 
 	// 敵の更新
-	enemy_->Update();
-
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
 	// ブロックの更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -137,6 +148,9 @@ void GameScene::Update() {
 	}
 
 	cameraController_->Update();
+
+	CheckAllCollisions();
+
 }
 
 void GameScene::Draw() {
@@ -172,7 +186,9 @@ void GameScene::Draw() {
 	// 自キャラの描画
 	player_->Draw();
 
-	enemy_->Draw();
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw();
+	}
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -227,4 +243,30 @@ void GameScene::GenerateBlocks() {
 			}
 		}
 	}
+
+
+}
+
+void GameScene::CheckAllCollisions() {
+
+#pragma region
+
+	// 判定対象1と2の座標
+	AABB aabb1, aabb2;
+
+	// 自キャラの座標
+	aabb1 = player_->GetAABB();
+	for (Enemy* enemy : enemies_) {
+		// 敵弾の座標
+		aabb2 = enemy->GetAABB();
+
+		// AABB同士の交差判定(
+		if (IsCollision(aabb1, aabb2)) {
+			// 自キャラの衝突判定コールバックを呼び出す
+			player_->OnCollision(enemy);
+			// 敵弾の衝突判定コールバックを呼び出す
+			enemy->OnCollision(player_);
+		}
+	}
+#pragma endregion
 }

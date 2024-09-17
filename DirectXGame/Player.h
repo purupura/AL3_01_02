@@ -7,9 +7,11 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Easing.h"
+#include "AABB.h"
 #include <algorithm>
 #include <cassert>
 #include <numbers>
+class Enemy;
 
 class MapChipField;
 
@@ -78,6 +80,10 @@ public:
 
 	void AnimateTurn();
 
+	void OnCollision(const Enemy* enemy);
+
+	AABB GetAABB();
+
 private:
 	enum class LRDirection {
 		kRight,
@@ -125,4 +131,10 @@ private:
 
 	// マップチップによるフィールド
 	MapChipField* mapChipField_ = nullptr;
+
+	//ワールド座標を取得
+	Vector3 GetWorldPosition();
+
+	
+
 };

@@ -497,3 +497,28 @@ void Player::AnimateTurn() {
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
 }
+
+void Player::OnCollision(const Enemy* enemy) { 
+	(void)enemy; 
+	
+	velocity_ += Vector3(0, kJumpAcceleration / 4.0f, 0);
+}
+
+Vector3 Player::GetWorldPosition() { 
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+AABB Player::GetAABB() {
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb;
+	aabb.min = {worldPos.x - 0.5f, worldPos.y - 0.5f, worldPos.z - 0.5f};
+	aabb.max = {worldPos.x + 0.5f, worldPos.y + 0.5f, worldPos.z + 0.5f};
+	return aabb;
+}

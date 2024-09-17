@@ -1,6 +1,7 @@
 #pragma once
 #include "Matrix4x4.h"
 #include "Vector3.h"
+#include "AABB.h"
 #include <cmath>
 
 // 加算
@@ -49,3 +50,5 @@ const Vector3 operator+(Vector3& v1, Vector3& v2);
 Vector3& operator-=(Vector3& lhv, const Vector3& rhv);
 
 const Vector3 operator-(Vector3& v1, Vector3& v2);
+
+bool IsCollision(const AABB& aabb1, const AABB& aabb2);

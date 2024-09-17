@@ -14,6 +14,7 @@
 #include "debugCamera.h"
 #include <vector>
 #include "Enemy.h"
+#include "AABB.h"
 
 /// <summary>
 /// ゲームシーン
@@ -73,7 +74,7 @@ private: // メンバ変数
 
 	Model* modelBlock_ = nullptr;
 
-	Enemy* enemy_ = nullptr;
+	std::list<Enemy*> enemies_;
 
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
@@ -95,6 +96,8 @@ private: // メンバ変数
 
 	// カメラコントローラ
 	CameraController* cameraController_;
+
+	void CheckAllCollisions();
 
 	/// <summary>
 	/// ゲームシーン用

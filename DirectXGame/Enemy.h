@@ -12,6 +12,9 @@
 #include"easing.h"
 #include"MathUtilityFortext.h"
 
+#include "AABB.h"
+class Player;
+
 class Enemy {
 
 	public:
@@ -21,6 +24,12 @@ class Enemy {
 		void Update();
 
 		void Draw();
+
+		AABB GetAABB();
+
+	    Vector3 GetWorldPosition();
+
+	    void OnCollision(const Player* player);
 
 	private:
 
