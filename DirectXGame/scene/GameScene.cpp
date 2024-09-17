@@ -22,6 +22,9 @@ GameScene::~GameScene() {
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
+
+	delete deathParticle_;
+
 }
 
 void GameScene::Initialize() {
@@ -42,6 +45,8 @@ void GameScene::Initialize() {
 	enemyModel_ = Model::CreateFromOBJ("enemy");
 
 	modelBlock_ = Model::CreateFromOBJ("block");
+
+	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -81,6 +86,11 @@ void GameScene::Initialize() {
 
 	// 自キャラの初期化
 	player_->Initialize(model_, textureHandle_, &viewProjection_, playerPosition);
+
+		// パーティクル生成
+	deathParticle_ = new DeathParticles;
+	deathParticle_->Initialize(modelParticles_, &viewProjection_, playerPosition);
+
 
 	player_->SetMapChipField(mapChipField_);
 
@@ -147,6 +157,10 @@ void GameScene::Update() {
 		viewProjection_.TransferMatrix();
 	}
 
+	if (deathParticle_) {
+		deathParticle_->Update();
+	}
+
 	cameraController_->Update();
 
 	CheckAllCollisions();
@@ -188,6 +202,10 @@ void GameScene::Draw() {
 
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
+	}
+
+		if (deathParticle_) {
+		deathParticle_->Draw();
 	}
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
