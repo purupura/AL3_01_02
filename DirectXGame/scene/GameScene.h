@@ -13,6 +13,7 @@
 #include "WorldTransform.h"
 #include "debugCamera.h"
 #include <vector>
+#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -55,8 +56,12 @@ private: // メンバ変数
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 
+	uint32_t enemyTextureHandle_ = 0;
+
 	// モデル
 	Model* model_ = nullptr;
+
+	Model* enemyModel_ = nullptr;
 
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
@@ -67,6 +72,8 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 
 	Model* modelBlock_ = nullptr;
+
+	Enemy* enemy_ = nullptr;
 
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 

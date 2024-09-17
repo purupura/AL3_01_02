@@ -6,7 +6,7 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "easing.h"
+#include "Easing.h"
 #include <algorithm>
 #include <cassert>
 #include <numbers>
