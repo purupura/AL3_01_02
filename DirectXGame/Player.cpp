@@ -469,10 +469,7 @@ void Player::CheckMapLanding(CollisionMapInfo& info) {
 			velocity_.x *= (1.0f - kAttenuationLanding);
 			// Y速度をゼロにする
 			velocity_.y = 0.0f;
-		} /* else {
-		     velocity_.y = kGravityAcceleration;
-		     velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
-		 }*/
+		} 
 	}
 }
 
