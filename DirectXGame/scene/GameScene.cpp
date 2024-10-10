@@ -34,13 +34,13 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	// ファイルを指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("player.png");
+	textureHandle_ = TextureManager::Load("player_life2/player_life2.png");
 
 	// ファイルを指定してテクスチャを読み込む
 	enemyTextureHandle_ = TextureManager::Load("enemy/enemy.png");
 
 	// 3Dモデルの生成
-	model_ = Model::CreateFromOBJ("player");
+	model_ = Model::CreateFromOBJ("player_life2");
 
 	enemyModel_ = Model::CreateFromOBJ("enemy");
 
