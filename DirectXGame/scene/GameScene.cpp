@@ -1,19 +1,98 @@
+
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include"MathUtilityForText.h"
+#include "MapChipField.h"
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+
+	delete debugCamera_;
+
+	delete modelBlock_;
+
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+
+			delete worldTransformBlock;
+		}
+	}
+	worldTransformBlocks_.clear();
+
+	delete mapChipField_;
+
+	delete model_;
+
+	delete player_;
+
+	delete modelSkydome_;
+}
 
 void GameScene::Initialize() {
+
+	debugCamera_ = new DebugCamera(1280, 720);
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	viewProjection_.Initialize();
+	worldTransform_.Initialize();
+	modelBlock_ = Model::CreateFromOBJ("cube",true);
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
+
+	GenerateBlock();
+	player_ = new Player;
+	playermodel_ = Model::CreateFromOBJ("player", true);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	model_ = Model::Create();
+	player_->Initialize(model_, textureHandle_, &viewProjection_, playerPosition);
+
+	skydome_ = new Skydome();
+
+	skydome_->Initialize(modelSkydome_, &viewProjection_);
+
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+	skydome_->Update();
+	debugCamera_->Update();
+	player_->Update();
+
+#ifdef _DEBUG
+
+	if (input_->TriggerKey(DIK_SPACE)) {
+		debugCameraActive_ = !debugCameraActive_;
+	}
+
+#endif //  _DEBUG
+
+	if (debugCameraActive_) {
+
+		debugCamera_->Update();
+
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+	} else {
+		viewProjection_.UpdateMatrix();
+	}
+
+
+
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
+			worldTransformBlock->UpdateMatrix();
+		}
+	}
+}
 
 void GameScene::Draw() {
 
@@ -40,7 +119,19 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
+	skydome_->Draw();
+	player_->Draw();
 	/// </summary>
+
+	// skydome_->Draw();
+
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
+			modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+		}
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -58,4 +149,28 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::GenerateBlock() {
+	uint32_t kNumBlockVirtical = mapChipField_->GetNumBlockVirtical();
+	uint32_t kNumBlockHorizonal = mapChipField_->GetNumBlockHorizontal();
+
+	worldTransformBlocks_.resize(kNumBlockHorizonal);
+
+	for (uint32_t i = 0; i < kNumBlockVirtical; i++) {
+		worldTransformBlocks_[i].resize(kNumBlockHorizonal);
+	}
+
+	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
+		worldTransformBlocks_[i].resize(kNumBlockHorizonal);
+		for (uint32_t j = 0; j < kNumBlockHorizonal; ++j) {
+
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+			}
+		}
+	}
 }
