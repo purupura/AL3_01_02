@@ -107,6 +107,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// ゲームシーンの毎フレーム処理
 		// gameScene->Update();
 
+
 		// titleScene->Update();
 
 		ChangeScene();
