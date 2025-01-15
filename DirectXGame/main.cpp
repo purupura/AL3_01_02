@@ -7,9 +7,11 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 #include "TitleScene.h"
+#include "ClearScene.h"
 
 GameScene* gameScene = nullptr;
 TitleScene* titleScene = nullptr;
+ClearScene* clearScene = nullptr;
 
 // シーン
 enum class Scene {
@@ -17,8 +19,8 @@ enum class Scene {
 	kUnknown = 0,
 
 	kTitle,
-	kGame
-
+	kGame,
+	kClear,
 };
 
 // 現在シーン
@@ -43,7 +45,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
-	win->CreateGameWindow(L"LE2D_05_カラサワ_ミクム_AL3");
+	win->CreateGameWindow(L"スクロール");
 
 		// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();
@@ -137,6 +139,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	delete titleScene;
 	delete gameScene;
+	delete clearScene;
 
 	// 各種解放
 	//	SafeDelete(gameScene);
@@ -175,17 +178,28 @@ void ChangeScene() {
 
 		if (gameScene->IsFinished()) {
 
-			scene = Scene::kTitle;
+			scene = Scene::kClear;
 
 			delete gameScene;
 
 			gameScene = nullptr;
 
-			titleScene = new TitleScene();
-
-			titleScene->Intialize();
+			clearScene = new ClearScene();
+			clearScene->Initialize();
 		}
 
+		break;
+
+		case Scene::kClear:
+		if (clearScene->IsFinished()) {
+
+			scene = Scene::kTitle;
+			delete clearScene;
+			clearScene = nullptr;
+
+			titleScene = new TitleScene();
+			titleScene->Intialize();
+		}
 		break;
 	}
 }
@@ -205,6 +219,9 @@ void UpdateScene() {
 		gameScene->Update();
 
 		break;
+	case Scene::kClear:
+		clearScene->Update();
+		break;
 	}
 }
 
@@ -222,6 +239,10 @@ void DrawScene() {
 
 		gameScene->Draw();
 
+		break;
+
+	case Scene::kClear:
+		clearScene->Draw();
 		break;
 	}
 }
